@@ -68,7 +68,36 @@
     <!--6 容器自动扫描IOC组件 -->
     <context:component-scan base-package="com.ssm.lishaoxiong"></context:component-scan>
 
-    <!--7 aspectj支持自动代理实现AOP功能 -->
+    <!--7 aspectj支持自动代理实现AOP功能-->
     <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
+
+
+    <!-- 切面类 -->
+    <bean id="AspectDemo" class="com.ssm.lishaoxiong.aop.AspectDemo"></bean>
+    <!--7 手动配置aop切面-->
+    <aop:config>
+        <!-- 定义一个切入点表达式【就是配置连接点】： 拦截哪些方法【意思就是那些路径下的类的方法要被拦截】 -->
+        <aop:pointcut id="testAop" expression="execution(* com.ssm.lishaoxiong.services.*(..))" />
+
+        <!-- 切面：这里我们就先使用spring支持的AspectJ框架的切面了-->
+        <!--引入你写的那个切面类-->
+        <aop:aspect ref="AspectDemo">
+            <!--切面和切点-->
+            <!-- 环绕通知 -->
+            <aop:around method="around" pointcut-ref="testAop"/>
+            <!-- 前置通知： 在目标方法调用前执行 -->
+            <aop:before method="begin" pointcut-ref="testAop"/>
+            <!-- 后置通知： -->
+            <aop:after method="after" pointcut-ref="testAop"/>
+            <!-- 返回后通知 -->
+            <aop:after-returning method="afterReturning" pointcut-ref="testAop"/>
+            <!-- 异常通知 -->
+            <aop:after-throwing method="afterThrowing" pointcut-ref="testAop"/>
+
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="AopTestImpl" class="com.ssm.lishaoxiong.services.AopTestImpl">
+    </bean>
 
 </beans>
